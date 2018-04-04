@@ -1,0 +1,130 @@
+This process takes 3 steps to create a catboard.bin which drives the xess 8 digit 7 segment
+display.
+cd catboard_yosys/example1
+
+pi@pi3-2:~/catboard_yosys/example1 $ ./led.sh 
+Warning: Yosys has only limited support for tri-state logic at the moment. (catboard.v:291)
+Warning: Yosys has only limited support for tri-state logic at the moment. (catboard.v:305)
+Warning: Yosys has only limited support for tri-state logic at the moment. (catboard.v:319)
+Warning: Yosys has only limited support for tri-state logic at the moment. (catboard.v:333)
+Warning: Yosys has only limited support for tri-state logic at the moment. (catboard.v:347)
+Warning: Yosys has only limited support for tri-state logic at the moment. (catboard.v:361)
+Warning: Yosys has only limited support for tri-state logic at the moment. (catboard.v:375)
+Warning: Yosys has only limited support for tri-state logic at the moment. (catboard.v:389)
+Warning: Identifier `\disp_inst_1_dummy' is implicitly declared at catboard.v:283.
+Warning: Identifier `\disp_inst_1_o_drvr' is implicitly declared at catboard.v:288.
+Warning: Identifier `\disp_inst_2_dummy' is implicitly declared at catboard.v:297.
+Warning: Identifier `\disp_inst_2_o_drvr' is implicitly declared at catboard.v:302.
+Warning: Identifier `\disp_inst_3_dummy' is implicitly declared at catboard.v:311.
+Warning: Identifier `\disp_inst_3_o_drvr' is implicitly declared at catboard.v:316.
+Warning: Identifier `\disp_inst_4_dummy' is implicitly declared at catboard.v:325.
+Warning: Identifier `\disp_inst_4_o_drvr' is implicitly declared at catboard.v:330.
+Warning: Identifier `\disp_inst_5_dummy' is implicitly declared at catboard.v:339.
+Warning: Identifier `\disp_inst_5_o_drvr' is implicitly declared at catboard.v:344.
+Warning: Identifier `\disp_inst_6_dummy' is implicitly declared at catboard.v:353.
+Warning: Identifier `\disp_inst_6_o_drvr' is implicitly declared at catboard.v:358.
+Warning: Identifier `\disp_inst_7_dummy' is implicitly declared at catboard.v:367.
+Warning: Identifier `\disp_inst_7_o_drvr' is implicitly declared at catboard.v:372.
+Warning: Identifier `\disp_inst_8_dummy' is implicitly declared at catboard.v:381.
+Warning: Identifier `\disp_inst_8_o_drvr' is implicitly declared at catboard.v:386.
+pi@pi3-2:~/catboard_yosys/example1 $ ls
+catboard.blif  catboard.v             led_bin.sh  led.sh
+catboard.pcf   catbpardleddigits.jpg  led_pnr.sh
+pi@pi3-2:~/catboard_yosys/example1 $ ./led_pnr.sh 
+seed: 1
+device: 8k
+read_chipdb +/share/arachne-pnr/chipdb-8k.bin...
+  supported packages: cb132, cb132:4k, cm121, cm121:4k, cm225, cm225:4k, cm81, cm81:4k, ct256, tq144:4k
+read_blif catboard.blif...
+prune...
+read_pcf catboard.pcf...
+instantiate_io...
+pack...
+
+After packing:
+IOs          9 / 206
+GBs          0 / 8
+  GB_IOs     0 / 8
+LCs          166 / 7680
+  DFF        26
+  CARRY      6
+  CARRY, DFF 60
+  DFF PASS   16
+  CARRY PASS 3
+BRAMs        0 / 32
+WARMBOOTs    0 / 1
+PLLs         0 / 2
+
+place_constraints...
+promote_globals...
+  promoted clk_i$2, 86 / 86
+  promoted $abc$4651$n3, 16 / 16
+  promoted $abc$4651$n5, 13 / 13
+  promoted disp_initialized, 14 / 15
+  promoted $abc$4651$n54, 8 / 8
+  promoted $abc$4651$n48, 7 / 7
+  promoted 6 nets
+    2 sr/we
+    3 cen/wclke
+    1 clk
+  6 globals
+    2 sr/we
+    3 cen/wclke
+    1 clk
+realize_constants...
+  realized 1
+place...
+  initial wire length = 2995
+  at iteration #50: temp = 12.3678, wire length = 2224
+  at iteration #100: temp = 7.03482, wire length = 1690
+  at iteration #150: temp = 3.09621, wire length = 887
+  at iteration #200: temp = 1.05445, wire length = 587
+  at iteration #250: temp = 0.00308244, wire length = 462
+  final wire length = 462
+
+After placement:
+PIOs       13 / 206
+PLBs       47 / 960
+BRAMs      0 / 32
+
+  place time 3.44s
+route...
+  pass 1, 0 shared.
+
+After routing:
+span_4     170 / 29696
+span_12    32 / 5632
+
+  route time 4.12s
+write_txt catboard.txt...
+
+pi@pi3-2:~/catboard_yosys/example1 $ ./led_bin.sh 
+
+If a catboard is mounted on the RPi
+
+pi@pi2-2:~/catboard_yosys $ sudo ./config_cat example1/catboard.bin
+
+OK: GPIO 25 exported
+OK: GPIO 17 exported
+OK: GPIO 22 exported
+
+OK: SPI driver loaded
+
+Setting GPIO directions
+out
+out
+in
+Setting output to low
+0
+Reseting FPGA
+0
+1
+Checking DONE pin
+0
+Continuing with configuration procedure
+263+1 records in
+263+1 records out
+135100 bytes (135 kB, 132 KiB) copied, 0.0303049 s, 4.5 MB/s
+Setting output to high
+1
+Checking DONE pin
