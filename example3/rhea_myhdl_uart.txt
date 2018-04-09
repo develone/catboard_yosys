@@ -1,0 +1,33 @@
+pi@pi2-2:~/catboard_yosys/example3 $ python catboard_blinky_host.py --build
+
+uartlite 
+  baudrate: 115200.000000 actual 115200.000000 
+  baud frequency: 288.000, baud limit: 15625.000
+  remainder 54.253472
+
+
+uartlite 
+  baudrate: 115200.000000 actual 115200.000000 
+  baud frequency: 288.000, baud limit: 15625.000
+  remainder 54.253472
+
+/usr/local/lib/python2.7/dist-packages/myhdl-1.0.dev0-py2.7.egg/myhdl/conversion/_toVerilog.py:349: ToVerilogWarning: Signal is not driven: glbl_timer_ticks0_reset
+  category=ToVerilogWarning
+/usr/local/lib/python2.7/dist-packages/myhdl-1.0.dev0-py2.7.egg/myhdl/conversion/_toVerilog.py:349: ToVerilogWarning: Signal is not driven: uartlite0_fifo_fast0_fbus_clear
+  category=ToVerilogWarning
+/usr/local/lib/python2.7/dist-packages/myhdl-1.0.dev0-py2.7.egg/myhdl/conversion/_toVerilog.py:327: ToVerilogWarning: Signal is driven but not read: uartlite0_fifo_fast0_fbus_read_valid
+  category=ToVerilogWarning
+/usr/local/lib/python2.7/dist-packages/myhdl-1.0.dev0-py2.7.egg/myhdl/conversion/_toVerilog.py:327: ToVerilogWarning: Signal is driven but not read: uartlite0_fifo_fast1_fbus_full
+  category=ToVerilogWarning
+/usr/local/lib/python2.7/dist-packages/myhdl-1.0.dev0-py2.7.egg/myhdl/conversion/_toVerilog.py:349: ToVerilogWarning: Signal is not driven: uartlite0_fifo_fast1_fbus_clear
+  category=ToVerilogWarning
+/usr/local/lib/python2.7/dist-packages/myhdl-1.0.dev0-py2.7.egg/myhdl/conversion/_toVerilog.py:327: ToVerilogWarning: Signal is driven but not read: command_bridge0_bytemon
+  category=ToVerilogWarning
+/usr/local/lib/python2.7/dist-packages/myhdl-1.0.dev0-py2.7.egg/myhdl/conversion/_toVerilog.py:327: ToVerilogWarning: Signal is driven but not read: command_bridge0_bb_per_addr
+  category=ToVerilogWarning
+/usr/local/lib/python2.7/dist-packages/myhdl-1.0.dev0-py2.7.egg/myhdl/conversion/_toVerilog.py:327: ToVerilogWarning: Signal is driven but not read: command_bridge0_error
+  category=ToVerilogWarning
+/usr/local/lib/python2.7/dist-packages/myhdl-1.0.dev0-py2.7.egg/myhdl/conversion/_toVerilog.py:327: ToVerilogWarning: Signal is driven but not read: command_bridge0_controller_basic0_tocnt
+  category=ToVerilogWarning
+   removing iceriver/catboard.v
+   moving catboard.v --> iceriver/

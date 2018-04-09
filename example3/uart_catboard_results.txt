@@ -1,0 +1,77 @@
+pi@pi2-2:~/catboard_yosys/example3 $ ./uart.sh 
+Warning: System task `$display' outside initial block is unsupported at iceriver/catboard.v:328.
+Warning: System task `$display' outside initial block is unsupported at iceriver/catboard.v:574.
+Warning: System task `$display' outside initial block is unsupported at iceriver/catboard.v:650.
+Warning: System task `$display' outside initial block is unsupported at iceriver/catboard.v:726.
+pi@pi2-2:~/catboard_yosys/example3 $ ./uart_pnr.sh 
+seed: 1
+device: 8k
+read_chipdb +/share/arachne-pnr/chipdb-8k.bin...
+  supported packages: cb132, cb132:4k, cm121, cm121:4k, cm225, cm225:4k, cm81, cm81:4k, ct256, tq144:4k
+read_blif iceriver/catboard.blif...
+prune...
+read_pcf iceriver/catboard.pcf...
+instantiate_io...
+pack...
+
+After packing:
+IOs          7 / 206
+GBs          0 / 8
+  GB_IOs     0 / 8
+LCs          704 / 7680
+  DFF        332
+  CARRY      63
+  CARRY, DFF 26
+  DFF PASS   232
+  CARRY PASS 14
+BRAMs        0 / 32
+WARMBOOTs    0 / 1
+PLLs         0 / 2
+
+place_constraints...
+promote_globals...
+  promoted clock$2, 358 / 358
+  promoted $0$memwr$\command_bridge0_packet$iceriver/catboard.v:688$40_EN[7:0]$257[7], 110 / 110
+  promoted uartlite0_uartrx0_fbusrx_write, 35 / 35
+  promoted uartlite0_fbustx_write, 36 / 36
+  promoted command_bridge0_state[3], 32 / 32
+  promoted $abc$9589$n9, 17 / 17
+  promoted $abc$9589$n7, 10 / 10
+  promoted glbl_timer_ticks0_timer_counter0_overflow, 11 / 11
+  promoted 8 nets
+    3 sr/we
+    4 cen/wclke
+    1 clk
+  8 globals
+    3 sr/we
+    4 cen/wclke
+    1 clk
+realize_constants...
+  realized 1
+place...
+  initial wire length = 16134
+  at iteration #50: temp = 11.7494, wire length = 12010
+  at iteration #100: temp = 7.79482, wire length = 8979
+  at iteration #150: temp = 3.80134, wire length = 5725
+  at iteration #200: temp = 1.95139, wire length = 3484
+  at iteration #250: temp = 0.951643, wire length = 2258
+  at iteration #300: temp = 0.00633725, wire length = 1615
+  final wire length = 1600
+
+After placement:
+PIOs       14 / 206
+PLBs       193 / 960
+BRAMs      0 / 32
+
+  place time 54.94s
+route...
+  pass 1, 1 shared.
+  pass 2, 0 shared.
+
+After routing:
+span_4     705 / 29696
+span_12    151 / 5632
+
+  route time 27.81s
+write_txt iceriver/catboard.txt...
+pi@pi2-2:~/catboard_yosys/example3 $ ./uart_bin.sh

@@ -1,0 +1,38 @@
+04/09/18 testing the uart on RPi2B to send data to catboard.
+This is a relook at earlier effort.
+~/jpeg-2000-test/pc_fast_blinker_jpeg/input_examples/notes_catboard_xula2_uart.txt
+
+This is using an older built code with iCECUBE2
+pi@pi2-2:~/catboard_yosys/example3 $ sudo ../config_cat iCECube2040316/catboard_bitmap.bin
+pi@pi2-2:~/catboard_yosys/example3 $ sudo python upload_on.py
+
+led_on.bin
+00000000   DE 02 00 00  00 80 04 CA  00 00 00 FF
+
+pi@pi2-2:~/catboard_yosys/example3 $ sudo python upload_off.py
+
+led_off.bin
+00000000   DE 02 00 00  00 80 04 CA  00 00 00 00
+
+New look
+
+pi@pi2-2:~/catboard_yosys/example3 $ python catboard_blinky_host.py --build
+creates iceriver folder 
+Details of the build are found in the file rhea_myhdl_uart.txt
+pi@pi2-2:~/catboard_yosys/example3 $ ls -la iceriver/
+total 2532
+drwxr-xr-x 2 pi pi    4096 Apr  9 10:36 .
+drwxr-xr-x 4 pi pi    4096 Apr  9 10:45 ..
+-rw-r--r-- 1 pi pi 1131097 Apr  9 10:39 build_iceriver.log
+-rw-r--r-- 1 pi pi  135100 Apr  9 10:39 catboard.bin
+-rw-r--r-- 1 pi pi  197256 Apr  9 10:37 catboard.blif
+-rw-r--r-- 1 pi pi     150 Apr  9 10:36 catboard.pcf
+-rw-r--r-- 1 pi pi 1073688 Apr  9 10:39 catboard.txt
+-rw-r--r-- 1 pi pi   26285 Apr  9 10:36 catboard.v
+-rw-r--r-- 1 pi pi     793 Apr  9 10:36 catboard.ys
+
+pi@pi2-2:~/catboard_yosys/example3 $ sudo ../config_cat iceriver/catboard.bin
+One led blinks but the uart does not turn on all leds like the iCECUBE2 build does.
+
+The files uart.sh, uart_pnr.sh and uart_bin.sh perform the synthesis, place & route
+and create bin file.  Details are found in the file uart_catboard_results.txt
