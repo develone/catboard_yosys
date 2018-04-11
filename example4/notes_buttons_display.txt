@@ -1,0 +1,212 @@
+04/09/18
+Objective:
+ 
+Using the dipsw to set the 1st and 8th digits of 7 segment display connedted to the Pmod.
+The switches sw1 & sw2 when pressed turn off the 1st and 8th digits.
+Requirements:
+	Hardware
+		RPi2B, RPi3B, or RPi3B+.
+		CATBOARD
+		StickIt!-LedDigits
+		http://www.xess.com/shop/product/stickit-leddigits/
+			Eight 7-segment LEDs
+			Needs only 8 I/O pins!
+			PMOD compatible
+			Wing compatible
+			Open-source design
+	Software
+		MyHDL
+		Yosys
+		Arachne-pnr
+		Icepack
+
+This demonstrates the use of MyHDL, Yosys, Arachne_pnr, and  Icepack.
+This provides a complete Development system that fits in the palm of your
+hand.
+
+MyHDL reads a python file and creates the Verilog file that can be used
+to create the bitfile that programs the Lattice HX8K FPGA.
+The script btn.sh calls yosys with the file catboard.v which creates the 
+catboard.blif file. 
+
+Once the Verilog file is created it is a 3 step process to create the bit file used to program
+the FPGA. 
+
+1.0)
+
+The script btn.sh calls yosys with the file catboard.v which creates the 
+catboard.blif file.
+
+#!/bin/bash
+rm -f iceriver/catboard.blif
+yosys -q -p "synth_ice40 -blif iceriver/catboard.blif" iceriver/catboard.v 
+
+pi@pi2-2:~/catboard_yosys/example4 $ ./btn.sh 
+Warning: Yosys has only limited support for tri-state logic at the moment. (iceriver/catboard.v:364)
+Warning: Yosys has only limited support for tri-state logic at the moment. (iceriver/catboard.v:378)
+Warning: Yosys has only limited support for tri-state logic at the moment. (iceriver/catboard.v:392)
+Warning: Yosys has only limited support for tri-state logic at the moment. (iceriver/catboard.v:406)
+Warning: Yosys has only limited support for tri-state logic at the moment. (iceriver/catboard.v:420)
+Warning: Yosys has only limited support for tri-state logic at the moment. (iceriver/catboard.v:434)
+Warning: Yosys has only limited support for tri-state logic at the moment. (iceriver/catboard.v:448)
+Warning: Yosys has only limited support for tri-state logic at the moment. (iceriver/catboard.v:462)
+Warning: Identifier `\d6' is implicitly declared at iceriver/catboard.v:71.
+Warning: Identifier `\d7' is implicitly declared at iceriver/catboard.v:72.
+Warning: Identifier `\d4' is implicitly declared at iceriver/catboard.v:73.
+Warning: Identifier `\d5' is implicitly declared at iceriver/catboard.v:74.
+Warning: Identifier `\d2' is implicitly declared at iceriver/catboard.v:75.
+Warning: Identifier `\d3' is implicitly declared at iceriver/catboard.v:76.
+Warning: Identifier `\d0' is implicitly declared at iceriver/catboard.v:77.
+Warning: Identifier `\d1' is implicitly declared at iceriver/catboard.v:78.
+Warning: Identifier `\display_inst_1_dummy' is implicitly declared at iceriver/catboard.v:356.
+Warning: Identifier `\display_inst_1_o_drvr' is implicitly declared at iceriver/catboard.v:361.
+Warning: Identifier `\display_inst_2_dummy' is implicitly declared at iceriver/catboard.v:370.
+Warning: Identifier `\display_inst_2_o_drvr' is implicitly declared at iceriver/catboard.v:375.
+Warning: Identifier `\display_inst_3_dummy' is implicitly declared at iceriver/catboard.v:384.
+Warning: Identifier `\display_inst_3_o_drvr' is implicitly declared at iceriver/catboard.v:389.
+Warning: Identifier `\display_inst_4_dummy' is implicitly declared at iceriver/catboard.v:398.
+Warning: Identifier `\display_inst_4_o_drvr' is implicitly declared at iceriver/catboard.v:403.
+Warning: Identifier `\display_inst_5_dummy' is implicitly declared at iceriver/catboard.v:412.
+Warning: Identifier `\display_inst_5_o_drvr' is implicitly declared at iceriver/catboard.v:417.
+Warning: Identifier `\display_inst_6_dummy' is implicitly declared at iceriver/catboard.v:426.
+Warning: Identifier `\display_inst_6_o_drvr' is implicitly declared at iceriver/catboard.v:431.
+Warning: Identifier `\display_inst_7_dummy' is implicitly declared at iceriver/catboard.v:440.
+Warning: Identifier `\display_inst_7_o_drvr' is implicitly declared at iceriver/catboard.v:445.
+Warning: Identifier `\display_inst_8_dummy' is implicitly declared at iceriver/catboard.v:454.
+Warning: Identifier `\display_inst_8_o_drvr' is implicitly declared at iceriver/catboard.v:459.
+
+2.0)
+The script btn_pnr.sh calls arachne_pnr with catboard.pcf whichs maps the signals to the pins 
+on the FPGA.  In addition the catboard.blif file fron step 1.0 is used.  It then creates the 
+Arachne-pnr creates the catboard.txt.
+
+catboard.pcf
+# pin definitions 
+set_io d7_o A15 
+set_io d0_o A11 
+set_io d5_o B13 
+set_io d6_o B15 
+set_io d2_o B12 
+set_io d3_o B11 
+set_io d1_o B10 
+set_io clk_i C8 
+set_io d4_o B14 
+set_io sw1_i A16
+set_io sw2_i B9
+set_io sw3_i[0] C6
+set_io sw3_i[1] C5
+set_io sw3_i[2] C4
+set_io sw3_i[3] C3
+
+  
+btn_pnr.sh
+
+#!/bin/bash
+rm -f iceriver/catboard.txt
+arachne-pnr  -d 8k -p iceriver/catboard.pcf -o iceriver/catboard.txt iceriver/catboard.blif
+
+pi@pi2-2:~/catboard_yosys/example4 $ ./btn_pnr.sh 
+seed: 1
+device: 8k
+read_chipdb +/share/arachne-pnr/chipdb-8k.bin...
+  supported packages: cb132, cb132:4k, cm121, cm121:4k, cm225, cm225:4k, cm81, cm81:4k, ct256, tq144:4k
+read_blif iceriver/catboard.blif...
+prune...
+read_pcf iceriver/catboard.pcf...
+instantiate_io...
+pack...
+
+After packing:
+IOs          15 / 206
+GBs          0 / 8
+  GB_IOs     0 / 8
+LCs          99 / 7680
+  DFF        23
+  CARRY      4
+  CARRY, DFF 7
+  DFF PASS   16
+  CARRY PASS 2
+BRAMs        0 / 32
+WARMBOOTs    0 / 1
+PLLs         0 / 2
+
+place_constraints...
+promote_globals...
+  promoted clk_i$2, 30 / 30
+  promoted $abc$4465$n3, 16 / 16
+  promoted $abc$4465$n5, 13 / 13
+  promoted display_initialized, 14 / 15
+  promoted $abc$4465$n73, 8 / 8
+  promoted $abc$4465$n68, 7 / 7
+  promoted 6 nets
+    2 sr/we
+    3 cen/wclke
+    1 clk
+  6 globals
+    2 sr/we
+    3 cen/wclke
+    1 clk
+realize_constants...
+  realized 1
+place...
+  initial wire length = 1753
+  at iteration #50: temp = 10.6039, wire length = 1764
+  at iteration #100: temp = 4.66705, wire length = 1018
+  at iteration #150: temp = 2.05409, wire length = 589
+  at iteration #200: temp = 0.578599, wire length = 369
+  final wire length = 334
+
+After placement:
+PIOs       18 / 206
+PLBs       28 / 960
+BRAMs      0 / 32
+
+  place time 4.25s
+route...
+  pass 1, 0 shared.
+
+After routing:
+span_4     101 / 29696
+span_12    33 / 5632
+
+  route time 3.03s
+write_txt iceriver/catboard.txt...
+
+3.0)
+The final steps is the script btn_bin.sh calls icepack using the catboard.txt of step 2
+to create the file catboard.bin.
+
+#!/bin/bash
+rm -f iceriver/catboard.bin 
+icepack iceriver/catboard.txt iceriver/catboard.bin
+
+pi@pi2-2:~/catboard_yosys/example4 $ ./btn_bin.sh
+
+Now the bit file can be download to the FPGA to program the 
+pi@pi2-2:~/catboard_yosys/example4 $ sudo ../config_cat iceriver/catboard.bin
+
+OK: GPIO 25 exported
+OK: GPIO 17 exported
+OK: GPIO 22 exported
+
+OK: SPI driver loaded
+
+Setting GPIO directions
+out
+out
+in
+Setting output to low
+0
+Reseting FPGA
+0
+1
+Checking DONE pin
+0
+Continuing with configuration procedure
+263+1 records in
+263+1 records out
+135100 bytes (135 kB, 132 KiB) copied, 0.0232005 s, 5.8 MB/s
+Setting output to high
+1
+Checking DONE pin
+1
