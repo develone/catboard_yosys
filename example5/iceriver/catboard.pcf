@@ -1,18 +1,72 @@
 
  
 # pin definitions 
-set_io d7_o A15 
-set_io d0_o A11 
-set_io d5_o B13 
-set_io d6_o B15 
-set_io d2_o B12 
-set_io d3_o B11 
-set_io d1_o B10 
+#set_io d7_o A15 
+#set_io d0_o A11 
+#set_io d5_o B13 
+#set_io d6_o B15 
+#set_io d2_o B12 
+#set_io d3_o B11 
+#set_io d1_o B10 
 set_io clk_i C8 
-set_io d4_o B14 
-set_io sw1_i A16
-set_io sw2_i B9
-set_io sw3_i[0] C6
-set_io sw3_i[1] C5
-set_io sw3_i[2] C4
-set_io sw3_i[3] C3
+#set_io d4_o B14 
+#set_io sw1_i A16
+#set_io sw2_i B9
+#set_io sw3_i[0] C6
+#set_io sw3_i[1] C5
+#set_io sw3_i[2] C4
+#set_io sw3_i[3] C3
+ 
+#set_io sdram_clk_i 
+#set_io sdram_clk_o
+#set_io led_status
+#set_io pb_i
+set_io sdramCntl_inst_sd_intf_cke G15
+set_io sdramCntl_inst_sd_intf_we J14
+#'R14', 'P14', 'M13', 'M14', 0-3 from rhea/rhea/boards/lattice/_catboard.py 
+set_io sdramCntl_inst_sd_intf_dq[0] R14
+set_io sdramCntl_inst_sd_intf_dq[1] P14
+set_io sdramCntl_inst_sd_intf_dq[2] M13
+set_io sdramCntl_inst_sd_intf_dq[3] M14
+#L13', 'L14', 'K13', 'K14',  4-7 from rhea/rhea/boards/lattice/_catboard.py
+set_io sdramCntl_inst_sd_intf_dq[4] L13
+set_io sdramCntl_inst_sd_intf_dq[5] L14
+set_io sdramCntl_inst_sd_intf_dq[6] K13
+set_io sdramCntl_inst_sd_intf_dq[7] K14
+#J16', 'L16', 'M16', 'M15', 8-11 from rhea/rhea/boards/lattice/_catboard.py
+set_io sdramCntl_inst_sd_intf_dq[8] J16
+set_io sdramCntl_inst_sd_intf_dq[9] L16
+set_io sdramCntl_inst_sd_intf_dq[10] M16
+set_io sdramCntl_inst_sd_intf_dq[11] M15
+#'N16', 'P16', 'P15', 'R15', 12-15 from rhea/rhea/boards/lattice/_catboard.py
+set_io sdramCntl_inst_sd_intf_dq[12] N16 
+set_io sdramCntl_inst_sd_intf_dq[13] P16
+set_io sdramCntl_inst_sd_intf_dq[14] P15
+set_io sdramCntl_inst_sd_intf_dq[15] R15
+set_io sdramCntl_inst_sd_intf_dqml 
+set_io sdramCntl_inst_sd_intf_cas k15
+set_io sdramCntl_inst_sd_intf_dqmh
+set_io sdramCntl_inst_sd_intf_ras K16
+set_io sdramCntl_inst_sd_intf_bs[0] H14 
+set_io sdramCntl_inst_sd_intf_bs[1] G13
+set_io sdramCntl_inst_sd_intf_cs H13
+ 
+#'F13', 'E14', 'E13', 'D14',   0-3 from rhea/rhea/boards/lattice/_catboard.py
+set_io sdramCntl_inst_sd_intf_addr[0]
+set_io sdramCntl_inst_sd_intf_addr[1]
+set_io sdramCntl_inst_sd_intf_addr[2]
+set_io sdramCntl_inst_sd_intf_addr[3]
+#'B16', 'C16', 'D15', 'D16',    4-7 from rhea/rhea/boards/lattice/_catboard.py 
+set_io sdramCntl_inst_sd_intf_addr[4]
+set_io sdramCntl_inst_sd_intf_addr[5]
+set_io sdramCntl_inst_sd_intf_addr[6]
+set_io sdramCntl_inst_sd_intf_addr[7]
+#'E16', 'F15', 'F14', 'F16',    8-11 from rhea/rhea/boards/lattice/_catboard.py
+set_io sdramCntl_inst_sd_intf_addr[8]
+set_io sdramCntl_inst_sd_intf_addr[9]
+set_io sdramCntl_inst_sd_intf_addr[10]
+set_io sdramCntl_inst_sd_intf_addr[11]
+#'G14',                          12 from rhea/rhea/boards/lattice/_catboard.py
+set_io sdramCntl_inst_sd_intf_addr[12] 
+
+ 
