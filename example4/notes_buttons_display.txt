@@ -19,6 +19,7 @@ Requirements:
 		Yosys
 		Arachne-pnr
 		Icepack
+		GTKWave
 
 This demonstrates the use of MyHDL, Yosys, Arachne_pnr, and  Icepack.
 This provides a complete Development system that fits in the palm of your

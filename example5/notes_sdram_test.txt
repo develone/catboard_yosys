@@ -1,0 +1,250 @@
+04/12/18
+Objective:  This example is testing the sdram on the catboard.
+
+Requirements:
+	Hardware
+		RPi2B, RPi3B, or RPi3B+.
+		CATBOARD
+		StickIt!-LedDigits
+		http://www.xess.com/shop/product/stickit-leddigits/
+			Eight 7-segment LEDs
+			Needs only 8 I/O pins!
+			PMOD compatible
+			Wing compatible
+			Open-source design
+	Software
+		MyHDL
+		Yosys
+		Arachne-pnr
+		Icepack
+		GTKWave
+
+This demonstrates the use of MyHDL, Yosys, Arachne_pnr, and  Icepack.
+This provides a complete Development system that fits in the palm of your
+hand.
+
+MyHDL reads a python file and creates the Verilog file that can be used
+to create the bitfile that programs the Lattice HX8K FPGA.
+The script sdram.sh calls yosys with the file catboard.v which creates the 
+catboard.blif file. 
+
+Once the Verilog file is created it is a 3 step process to create the bit file used to program
+the FPGA. 
+
+1.0)
+
+The script sdram.sh calls yosys with the file catboard.v which creates the 
+catboard.blif file.
+
+#!/bin/bash
+rm -f iceriver/catboard.blif
+yosys -q -p "synth_ice40 -blif iceriver/catboard.blif" iceriver/catboard.v 
+
+pi@pi2-2:~/catboard_yosys/example5 $ ./sdram.sh 
+Warning: Yosys has only limited support for tri-state logic at the moment. (iceriver/catboard.v:382)
+Warning: Replacing memory \sdramCntl_inst_activeFlag_r with list of registers. See iceriver/catboard.v:341
+Warning: Replacing memory \sdramCntl_inst_activeRow_r with list of registers. See iceriver/catboard.v:332
+Warning: Replacing memory \sdramCntl_inst_activeRow_x with list of registers. See iceriver/catboard.v:205
+Warning: Replacing memory \sdramCntl_inst_activeFlag_x with list of registers. See iceriver/catboard.v:204
+
+2.0)
+The script btn_pnr.sh calls arachne_pnr with catboard.pcf whichs maps the signals to the pins 
+on the FPGA.  In addition the catboard.blif file fron step 1.0 is used.  It then creates the 
+Arachne-pnr creates the catboard.txt.
+
+pi@pi2-2:~/catboard_yosys/example5 $ ./sdram_pnr.sh 
+
+ 
+# pin definitions 
+set_io led_disp_d7_o A15 
+set_io led_disp_d0_o A11 
+set_io led_disp_d5_o B13 
+set_io led_disp_d6_o B15 
+set_io led_disp_d2_o B12 
+set_io led_disp_d3_o B11 
+set_io led_disp_d1_o B10 
+set_io master_clk_i C8 
+set_io led_disp_d4_o B14 
+#set_io sw1_i A16
+#set_io sw2_i B9
+#set_io sw3_i[0] C6
+#set_io sw3_i[1] C5
+#set_io sw3_i[2] C4
+#set_io sw3_i[3] C3
+
+set_io led_status[0] A9 
+set_io led_status[1] B8 
+set_io led_status[2] A7 
+set_io led_status[3] B7 
+ 
+set_io sdram_clk_i H16
+set_io sdram_clk_o	G16
+
+set_io pb_i A16 -pullup yes
+set_io sdramCntl_inst_sd_intf_cke G15 -pullup yes
+set_io sdramCntl_inst_sd_intf_we J14
+#'R14', 'P14', 'M13', 'M14', 0-3 from rhea/rhea/boards/lattice/_catboard.py 
+#D0 D1 D2 D3 D4 D5 D6 D7 D8 D9 D10 D11 D12 D13 D14 D15 ok 
+set_io sdramCntl_inst_sd_intf_dq[0] R14
+set_io sdramCntl_inst_sd_intf_dq[1] P14
+set_io sdramCntl_inst_sd_intf_dq[2] M13
+set_io sdramCntl_inst_sd_intf_dq[3] M14
+#L13', 'L14', 'K13', 'K14',  4-7 from rhea/rhea/boards/lattice/_catboard.py
+set_io sdramCntl_inst_sd_intf_dq[4] L13
+set_io sdramCntl_inst_sd_intf_dq[5] L14
+set_io sdramCntl_inst_sd_intf_dq[6] K13
+set_io sdramCntl_inst_sd_intf_dq[7] K14
+#J16', 'L16', 'M16', 'M15', 8-11 from rhea/rhea/boards/lattice/_catboard.py
+set_io sdramCntl_inst_sd_intf_dq[8] J16
+set_io sdramCntl_inst_sd_intf_dq[9] L16
+set_io sdramCntl_inst_sd_intf_dq[10] M16
+set_io sdramCntl_inst_sd_intf_dq[11] M15
+#'N16', 'P16', 'P15', 'R15', 12-15 from rhea/rhea/boards/lattice/_catboard.py
+set_io sdramCntl_inst_sd_intf_dq[12] N16 
+set_io sdramCntl_inst_sd_intf_dq[13] P16
+set_io sdramCntl_inst_sd_intf_dq[14] P15
+set_io sdramCntl_inst_sd_intf_dq[15] R15
+set_io sdramCntl_inst_sd_intf_dqml J13
+set_io sdramCntl_inst_sd_intf_cas K15
+set_io sdramCntl_inst_sd_intf_dqmh J15
+set_io sdramCntl_inst_sd_intf_ras K16
+set_io sdramCntl_inst_sd_intf_bs[0] H14 
+set_io sdramCntl_inst_sd_intf_bs[1] G13
+set_io sdramCntl_inst_sd_intf_cs H13 -pullup yes
+ 
+#'F13', 'E14', 'E13', 'D14',   0-3 from rhea/rhea/boards/lattice/_catboard.py
+# A0 A1 A2 A3 A4 A5 A6 A7 A8 A9 A10 A11 A12 ok
+set_io sdramCntl_inst_sd_intf_addr[0] F13
+set_io sdramCntl_inst_sd_intf_addr[1] E14
+set_io sdramCntl_inst_sd_intf_addr[2] E13
+set_io sdramCntl_inst_sd_intf_addr[3] D14
+#'B16', 'C16', 'D15', 'D16',    4-7 from rhea/rhea/boards/lattice/_catboard.py 
+set_io sdramCntl_inst_sd_intf_addr[4] B16
+set_io sdramCntl_inst_sd_intf_addr[5] C16
+set_io sdramCntl_inst_sd_intf_addr[6] D15 
+set_io sdramCntl_inst_sd_intf_addr[7] D16
+#'E16', 'F15', 'F14', 'F16',    8-11 from rhea/rhea/boards/lattice/_catboard.py
+set_io sdramCntl_inst_sd_intf_addr[8] E16 
+set_io sdramCntl_inst_sd_intf_addr[9] F15
+set_io sdramCntl_inst_sd_intf_addr[10] F14
+set_io sdramCntl_inst_sd_intf_addr[11] F16
+#'G14',                          12 from rhea/rhea/boards/lattice/_catboard.py
+set_io sdramCntl_inst_sd_intf_addr[12] G14
+
+sdram_pnr.sh
+
+#!/bin/bash
+rm -f iceriver/catboard.txt
+arachne-pnr  -d 8k -p iceriver/catboard.pcf -o iceriver/catboard.txt iceriver/catboard.blif 
+
+seed: 1
+device: 8k
+read_chipdb +/share/arachne-pnr/chipdb-8k.bin...
+  supported packages: cb132, cb132:4k, cm121, cm121:4k, cm225, cm225:4k, cm81, cm81:4k, ct256, tq144:4k
+read_blif iceriver/catboard.blif...
+prune...
+read_pcf iceriver/catboard.pcf...
+instantiate_io...
+pack...
+
+After packing:
+IOs          54 / 206
+GBs          0 / 8
+  GB_IOs     0 / 8
+LCs          551 / 7680
+  DFF        225
+  CARRY      78
+  CARRY, DFF 0
+  DFF PASS   114
+  CARRY PASS 7
+BRAMs        0 / 32
+WARMBOOTs    0 / 1
+PLLs         0 / 2
+
+place_constraints...
+note: forcing pull-up for `pb_i' to `1'
+note: forcing pull-up for `sdramCntl_inst_sd_intf_cke' to `1'
+note: forcing pull-up for `sdramCntl_inst_sd_intf_cs' to `1'
+promote_globals...
+  promoted sdram_clk_i$2, 225 / 225
+  promoted memory_test_inst_host_intf_rst_i, 195 / 195
+  promoted $abc$10706$n505, 28 / 28
+  promoted sdramCntl_inst_rdPipeline_r[1], 18 / 18
+  promoted memory_test_inst_rand_load, 17 / 17
+  promoted $abc$10706$n530, 16 / 16
+  promoted $abc$10706$n602, 13 / 13
+  promoted $abc$10706$n531, 8 / 8
+  promoted 8 nets
+    3 sr/we
+    4 cen/wclke
+    1 clk
+  8 globals
+    3 sr/we
+    4 cen/wclke
+    1 clk
+realize_constants...
+  realized 1
+place...
+  initial wire length = 12628
+  at iteration #50: temp = 11.7494, wire length = 9943
+  at iteration #100: temp = 7.03482, wire length = 7164
+  at iteration #150: temp = 3.43071, wire length = 4252
+  at iteration #200: temp = 1.43445, wire length = 2704
+  at iteration #250: temp = 0.189595, wire length = 1774
+  final wire length = 1730
+
+After placement:
+PIOs       44 / 206
+PLBs       151 / 960
+BRAMs      0 / 32
+
+  place time 29.53s
+route...
+  pass 1, 0 shared.
+
+After routing:
+span_4     658 / 29696
+span_12    162 / 5632
+
+  route time 22.16s
+write_txt iceriver/catboard.txt...
+
+3.0)
+The final steps is the script btn_bin.sh calls icepack using the catboard.txt of step 2
+to create the file catboard.bin.
+
+sdram_bin.sh
+
+#!/bin/bash
+rm -f iceriver/catboard.bin 
+icepack iceriver/catboard.txt iceriver/catboard.bin
+pi@pi2-2:~/catboard_yosys/example5 $ ./sdram_bin.sh
+
+Now the bit file can be download to the FPGA to program the 
+pi@pi2-2:~/catboard_yosys/example5 $ sudo ../config_cat iceriver/catboard.bin 
+
+OK: GPIO 25 exported
+OK: GPIO 17 exported
+OK: GPIO 22 exported
+
+OK: SPI driver loaded
+
+Setting GPIO directions
+out
+out
+in
+Setting output to low
+0
+Reseting FPGA
+0
+1
+Checking DONE pin
+0
+Continuing with configuration procedure
+263+1 records in
+263+1 records out
+135100 bytes (135 kB, 132 KiB) copied, 0.0236959 s, 5.7 MB/s
+Setting output to high
+1
+Checking DONE pin
+1
