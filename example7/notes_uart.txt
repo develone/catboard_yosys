@@ -1,0 +1,50 @@
+04/16/18
+
+Dave Vanderbout used pin M10 on FPGA CDONE for programming the FPGA
+These pins have caused problems with arachne-pnr
+ 
+N11 CRESET_B using the BCM19_MOSO, BCM20_MOSI, and BCM21_SCLK.
+M10 CDONE both of these have caused errors with arachne-pnr.
+When I tried to use BCM17 rts pin 11
+catboard.pcf:7: fatal error: unknown pin `M10' on package `ct256'
+BCM17 rts on RPi pin 11
+
+ 
+        // If i_setup isnt set up as an input parameter, it needs to be set.
+        // We do so here, to a setting appropriate to create a 115200 Baud
+        // comms system from a 100MHz clock.  This also sets us to an 8-bit
+        // data word, 1-stop bit, and no parity.
+        wire    [29:0]  i_setup;
+        assign          i_setup = 30'd868;      // 115200 Baud, if clk @ 100MHz
+ 
+parameter       [30:0]  INITIAL_SETUP = 31'd868;
+868.055555556 = 100000000 / 115200
+bits
+  3210 9876 5432 1098 7654 3210 115200 Baud, if clk @ 100MHz
+  0000 0000 1101 1000 0110 1000
+  
+  7654 3210 9876 5432 1098 7654 3210
+  0000 0000 0000 1101 1000 0110 1000
+  1 stop bit
+  no parity
+  
+//      i_setup[27]     Indicates whether or not to use one or two stop bits.
+//              Set this to one to expect two stop bits, zero for one.
+//
+//      i_setup[26]     Indicates whether or not a parity bit exists.  Set this
+//              to 1'b1 to include parity.
+//
+//      i_setup[25]     Indicates whether or not the parity bit is fixed.  Set
+//              to 1'b1 to include a fixed bit of parity, 1'b0 to allow the
+//              parity to be set based upon data.  (Both assume the parity
+//              enable value is set.)
+
+
+
+
+Need to determine what pin on the FPGA provides signal pwr_reset.
+
+        reg     pwr_reset;
+        initial pwr_reset = 1'b1;
+        always @(posedge i_clk)
+                pwr_reset <= 1'b0;

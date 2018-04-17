@@ -1,11 +1,12 @@
-set_io i_clk R9			# 25MHz clock ?
-set_io o_ledg C8
+set_io i_clk C8		# 25MHz clock ?
+set_io o_ledg B7
 # set_io o_ledg[1] F7
 # set_io o_ledr K9
 
-
 set_io i_rts B8			#	i_rts
-set_io o_uart_tx A9		#	o_uart_tx
-set_io i_uart_rx A10		#	i_uart_rx
-set_io o_cts A11		#	o_cts
+
+#set_io i_rts M10			#	i_rts
+set_io o_uart_tx T14		#	o_uart_tx
+set_io i_uart_rx T15		#	i_uart_rx
+set_io o_cts R4		#	o_cts
 
